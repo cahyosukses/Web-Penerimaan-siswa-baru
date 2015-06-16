@@ -1,0 +1,107 @@
+<?php
+	session_start();
+	$path = $_SERVER['DOCUMENT_ROOT'];
+
+	include_once $path . '/config/database.php';
+
+	$database = new database();
+	$db = $database->getConnection();		
+
+	$page_title = "Data Hewan";
+	$kode = isset($_GET['id']) ? $_GET['id'] : die('ERROR: Kode Error.');
+
+	include_once $path . '/admin/header.php';
+	include_once $path . '/objects/hewan.php';
+	
+	$hewan = new hewan($db);
+	$hewan->hewan_kode = $kode;	 
+	$hewan->ShowOne();
+	
+	echo "<div class='container'>";
+
+	if($_POST){	 
+	    $hewan->hewan_kode = $_POST['hewan_kode'];	    
+	    $hewan->hewan_nama = $_POST['hewan_nama'];
+	    $hewan->hewan_jenis = $_POST['hewan_jenis'];	    
+	    $hewan->hewan_kelamin = $_POST['hewan_kelamin'];
+	    $hewan->harga = $_POST['harga'];	    
+	    $hewan->detail = $_POST['detail'];
+	    
+	    if($hewan->Update()){
+	        echo "<div class='alert alert-success alert-dismissable'>";
+	            echo "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>";
+	            echo "Data berhasil diubah.";
+	        echo "</div>";
+	    }
+	 
+	    else{
+	        echo "<div class='alert alert-danger alert-dismissable'>";
+	            echo "<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>";
+	            echo "Gagal mengubah data";
+	        echo "</div>";
+	    }
+	}	
+	
+?>
+	<div class='row'>
+		<form action='#' method='post' class='form-horizontal' role='form'>
+
+			<div class="form-group">
+				<label class="control-label col-sm-3" for="hewan_kode">Kode</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" name="hewan_kode" maxlength="11" readonly value="<?php echo $hewan->hewan_kode; ?>">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-3" for="hewan_nama">Nama Hewan</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" name="hewan_nama" maxlength="30" value="<?php echo $hewan->hewan_nama; ?>">
+				</div>
+			</div>
+							
+			<div class="form-group">
+				<label class="control-label col-sm-3" for="hewan_jenis">Jenis Hewan</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" name="hewan_jenis" maxlength="50" value="<?php echo $hewan->hewan_jenis; ?>">
+				</div>
+			</div>				
+			
+			<div class="form-group">
+				<label class="control-label col-sm-3" for="hewan_kelamin">Kelamin</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" name="hewan_kelamin" maxlength="6" value="<?php echo $hewan->hewan_kelamin; ?>">
+				</div>
+			</div>				
+			
+			<div class="form-group">
+				<label class="control-label col-sm-3" for="harga">Harga</label>
+				<div class="col-sm-6">
+					<input type="number" class="form-control" name="harga" value="<?php echo $hewan->harga; ?>">
+				</div>
+			</div>				
+			
+			<div class="form-group">
+				<label class="control-label col-sm-3" for="detail">Detail</label>
+				<div class="col-sm-6">
+					<textarea class="form-control" name="detail" ><?php echo $hewan->detail; ?></textarea>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-3" for="myimage">Gambar</label>
+				<div class="col-sm-6">
+					<input type="file" class="form-control" name="myimage" maxlength="100" value="<?php echo $hewan->nama; ?>">
+				</div>
+			</div>				
+			
+			<div class="form-group">
+				<div class="col-sm-3"></div>
+				<div class="col-sm-6">
+				<button type="submit" class="btn btn-primary">Simpan</button>
+			</div>								
+			</div>								
+		</form>
+	</div> <!--ROW-->
+	<?php include_once $_SERVER['DOCUMENT_ROOT'] . "/admin/footer.php"; ?>
+</div> <!-- CONTAINER -->
